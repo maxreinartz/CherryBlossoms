@@ -27,6 +27,13 @@ I am aware that it is pretty laggy and it uses a lot of ram.
 
 ## Controls
 
+Period: Show/Hide Debug Info
+S: Screenshot
+Up: Add 50
+Down: Remove 50
+Click: Add White Cherry Blossoms (fun to use)
+Right Click: Push Away Cherry Blossoms
+
 ## Contributing
 
 Feel free to contribute!
