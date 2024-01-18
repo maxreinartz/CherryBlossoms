@@ -4,8 +4,8 @@ This is a simple program I made in my free time. It's a full screen applicaton o
 I am aware that it is pretty laggy and it uses a lot of ram.
 
 ![Screenshot 1 of Cherry Blossoms](img1.png)
-![Screenshot 2 of Cherry Blossoms](img2.png)
-![Screenshot 3 of Cherry Blossoms](img3.png)
+![Screenshot 2 of Cherry Blossoms](img3.png)
+![Screenshot 3 of Cherry Blossoms](img2.png)
 
 ## Table of Contents
 
@@ -27,11 +27,11 @@ I am aware that it is pretty laggy and it uses a lot of ram.
 
 ## Controls
 
-Period: Show/Hide Debug Info
-S: Screenshot
-Up: Add 50
-Down: Remove 50
-Click: Add White Cherry Blossoms (fun to use)
+Period: Show/Hide Debug Info  
+S: Screenshot  
+Up: Add 50  
+Down: Remove 50  
+Click: Add White Cherry Blossoms (fun to use)  
 Right Click: Push Away Cherry Blossoms
 
 ## Contributing
