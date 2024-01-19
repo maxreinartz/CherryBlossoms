@@ -1,7 +1,6 @@
 # Cherry Blossoms
 
 This is a simple program I made in my free time. It's a full screen applicaton of cherry blossoms falling! Check below for a screenshot.
-I am aware that it is pretty laggy and it uses a lot of ram.
 
 ![Screenshot 1 of Cherry Blossoms](img1.png)
 ![Screenshot 2 of Cherry Blossoms](img3.png)
