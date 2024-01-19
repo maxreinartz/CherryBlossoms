@@ -28,8 +28,11 @@ This is a simple program I made in my free time. It's a full screen applicaton o
 
 Period: Show/Hide Debug Info  
 S: Screenshot  
+P: Pause  
 Up: Add 50  
 Down: Remove 50  
+Left: Slow Down  
+Right: Speed Up
 Click: Add White Cherry Blossoms (fun to use)  
 Right Click: Push Away Cherry Blossoms
 

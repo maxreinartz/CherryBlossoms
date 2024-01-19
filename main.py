@@ -17,6 +17,8 @@ clock = pygame.time.Clock()
 pygame.display.set_caption('Cherry Blossoms')
 icon = pygame.image.load('icon.png')
 pygame.display.set_icon(icon)
+paused = False
+time_scale = 1.0
 
 class CherryBlossom:
     def __init__(self):
@@ -31,9 +33,9 @@ class CherryBlossom:
         self.speed_x = random.uniform(0.8 * Modified_SCREEN_WIDTH, 2 * Modified_SCREEN_WIDTH)
         self.color = (random.randint(200, 255), random.randint(100, 192), random.randint(180, 203))
 
-    def update(self):
-      self.y += self.speed
-      self.x += self.speed_x
+    def update(self, dt):
+      self.y += self.speed * dt
+      self.x += self.speed_x * dt
       if self.y > SCREEN_HEIGHT:
           self.reset()
       elif self.x > SCREEN_WIDTH:
@@ -63,9 +65,9 @@ class WhiteCherryBlossom(CherryBlossom):
         self.color = random.choice([(255, 255, 255), (211, 211, 211)])
         self.radius = random.randint(1, 3)
 
-    def update(self):
-        self.y += self.speed
-        self.x += self.speed_x
+    def update(self, dt):
+        self.y += self.speed * dt
+        self.x += self.speed_x * dt
         if self.y > SCREEN_HEIGHT or self.x > SCREEN_WIDTH:
           cherry_blossoms.remove(self)
 
@@ -73,6 +75,9 @@ cherry_blossoms = [CherryBlossom() for _ in range(700)]
 
 running = True
 while running:
+    dt = clock.tick(60) / 16.0 # 16 keeps the delta time at 1.0
+    dt *= time_scale
+
     pink_cherry_blossoms = [cherry_blossom for cherry_blossom in cherry_blossoms if cherry_blossom.isPink]
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -89,11 +94,19 @@ while running:
                         if cherry_blossoms[i].isPink:
                             del cherry_blossoms[i]
                             break
+            elif event.key == pygame.K_LEFT:
+                time_scale -= 0.1
+                if time_scale < 0.1:
+                    time_scale = 0.1
+            elif event.key == pygame.K_RIGHT:
+                time_scale += 0.1
             elif event.key == pygame.K_PERIOD:
                 text = not text
             elif event.key == pygame.K_s:
                 timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
                 pygame.image.save(screen, f'screenshot_{timestamp}.png')
+            if event.key == pygame.K_p:
+                paused = not paused
     if pygame.mouse.get_pressed()[0]:
         for _ in range(int(round(len(pink_cherry_blossoms) / 100, 0))):
             cherry_blossoms.append(WhiteCherryBlossom())  
@@ -102,8 +115,9 @@ while running:
         for cherry_blossom in cherry_blossoms:
             cherry_blossom.push_away(mouse_pos)
 
-    for cherry_blossom in cherry_blossoms[:]:
-        cherry_blossom.update()
+    if not paused:
+        for cherry_blossom in cherry_blossoms[:]:
+            cherry_blossom.update(dt)
 
     screen.fill((0, 0, 0))
     for cherry_blossom in cherry_blossoms:
@@ -112,17 +126,20 @@ while running:
     fps = clock.get_fps()
 
     fps_text = font.render("FPS: {:.2f}".format(fps), True, (255, 255, 255))
+    dt_text = font.render("Delta Time: {:.2f}".format(dt), True, (255, 255, 255))
+    scale_text = font.render("Time Scale: {:.2f}".format(time_scale), True, (255, 255, 255))
     pink_count_text = font.render('Pink Count: {}'.format(len(pink_cherry_blossoms)), False, (255, 255, 255))
     count_text = font.render('Count: {}'.format(len(cherry_blossoms)), False, (255, 255, 255))
-    controls_text = font.render('Period: Show/Hide Text, S: Screenshot, Up: Add 50, Down: Remove 50, Click: Add White, Right Click: Push Away', False, (255, 255, 255))
+    controls_text = font.render('Period: Show/Hide Text, S: Screenshot, P: Pause, Up: Add 50, Down: Remove 50, Left: Slow Down, Right: Speed Up, Click: Add White, Right Click: Push Away', False, (255, 255, 255))
 
     if(text):
         screen.blit(controls_text, (SCREEN_WIDTH - 50 - controls_text.get_width(), 0))
-        screen.blit(pink_count_text, (SCREEN_WIDTH - 50 - pink_count_text.get_width(), 50))
-        screen.blit(count_text, (SCREEN_WIDTH - 50 - count_text.get_width(), 100))
-        screen.blit(fps_text, (SCREEN_WIDTH - 50 - fps_text.get_width(), 150))
+        screen.blit(dt_text, (SCREEN_WIDTH - 50 - dt_text.get_width(), 50))
+        screen.blit(scale_text, (SCREEN_WIDTH - 50 - scale_text.get_width(), 100))
+        screen.blit(pink_count_text, (SCREEN_WIDTH - 50 - pink_count_text.get_width(), 150))
+        screen.blit(count_text, (SCREEN_WIDTH - 50 - count_text.get_width(), 200))
+        screen.blit(fps_text, (SCREEN_WIDTH - 50 - fps_text.get_width(), 250))
 
-    clock.tick(60)
     pygame.display.flip()
 
 pygame.quit()
