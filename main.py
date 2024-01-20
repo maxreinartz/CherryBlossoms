@@ -172,7 +172,7 @@ while running:
     scale_text = font.render("Time Scale: {:.2f}".format(time_scale), True, (255, 255, 255))
     pink_count_text = font.render('Pink Count: {}'.format(len(pink_cherry_blossoms)), False, (255, 255, 255))
     count_text = font.render('Count: {}'.format(len(cherry_blossoms)), False, (255, 255, 255))
-    controls_text = font.render('Period: Show/Hide Text, S: Screenshot, P: Pause, Up: Add 50, Down: Remove 50, Left: Slow Down, Right: Speed Up, Click: Add White, Middle Click: Firework, Right Click: Push Away', False, (255, 255, 255))
+    controls_text = font.render('Esc: Quit, Period: Show/Hide Text, S: Screenshot, P: Pause, Up: Add 50, Down: Remove 50, Left: Slow Down, Right: Speed Up, Click: Add White, Middle Click: Firework, Right Click: Push Away', False, (255, 255, 255))
 
     if(text):
         screen.blit(controls_text, (screen_width - controls_text.get_width(), 0))
