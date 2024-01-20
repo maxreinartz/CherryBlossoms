@@ -11,7 +11,7 @@ screen_width, screen_height = get_screen_size()
 
 pygame.init()
 pygame.font.init()
-font = pygame.font.SysFont('Comic Sans MS', 30)
+font = pygame.font.SysFont('Comic Sans MS', 20)
 text = False
 
 infoObject = pygame.display.Info()
@@ -140,11 +140,11 @@ while running:
 
     if(text):
         screen.blit(controls_text, (screen_width - controls_text.get_width(), 0))
-        screen.blit(dt_text, (screen_width - dt_text.get_width(), 50))
-        screen.blit(scale_text, (screen_width - scale_text.get_width(), 100))
-        screen.blit(pink_count_text, (screen_width - pink_count_text.get_width(), 150))
-        screen.blit(count_text, (screen_width - count_text.get_width(), 200))
-        screen.blit(fps_text, (screen_width - fps_text.get_width(), 250))
+        screen.blit(dt_text, (screen_width - dt_text.get_width(), 30))
+        screen.blit(scale_text, (screen_width - scale_text.get_width(), 60))
+        screen.blit(pink_count_text, (screen_width - pink_count_text.get_width(), 90))
+        screen.blit(count_text, (screen_width - count_text.get_width(), 120))
+        screen.blit(fps_text, (screen_width - fps_text.get_width(), 150))
 
     pygame.display.flip()
 
