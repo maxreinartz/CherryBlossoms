@@ -16,13 +16,13 @@ This is a simple program I made in my free time. It's a full screen applicaton o
 
 ## Installation
 
-1. Clone this repo
+1. Clone this repo  
 ```git clone https://github.com/creeper76/cherryblossoms```
 
-2. Install dependencies
+2. Install dependencies  
 ```pip install pygame screeninfo```
 
-3. Run the file
+3. Run the file  
 ```python main.py```
 
 ## Controls
