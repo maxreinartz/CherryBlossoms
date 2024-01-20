@@ -1,5 +1,13 @@
 import pygame, random, math
 from datetime import datetime
+from screeninfo import get_monitors
+
+def get_screen_size():
+    for m in get_monitors():
+        if m.is_primary:
+            return m.width, m.height
+
+screen_width, screen_height = get_screen_size()
 
 pygame.init()
 pygame.font.init()
@@ -7,12 +15,10 @@ font = pygame.font.SysFont('Comic Sans MS', 30)
 text = False
 
 infoObject = pygame.display.Info()
-SCREEN_WIDTH = infoObject.current_w + 100
-SCREEN_HEIGHT = infoObject.current_h + 100
-Modified_SCREEN_WIDTH = (SCREEN_WIDTH/800)
-Modified_SCREEN_HEIGHT = (SCREEN_HEIGHT/600)
+Modified_SCREEN_WIDTH = (screen_width/800)
+Modified_SCREEN_HEIGHT = (screen_width/600)
 
-screen = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.FULLSCREEN)
+screen = pygame.display.set_mode((screen_width, screen_height), pygame.NOFRAME)
 clock = pygame.time.Clock()
 pygame.display.set_caption('Cherry Blossoms')
 icon = pygame.image.load('icon.png')
@@ -27,8 +33,8 @@ class CherryBlossom:
         self.isPink = True
 
     def reset(self):
-        self.x = random.uniform(-100, SCREEN_WIDTH)
-        self.y = random.uniform(-SCREEN_HEIGHT, -10)
+        self.x = random.uniform(-100, screen_width)
+        self.y = random.uniform(-screen_height, -10)
         self.speed = random.uniform(0.4 * Modified_SCREEN_HEIGHT, 0.8 * Modified_SCREEN_HEIGHT)
         self.speed_x = random.uniform(0.8 * Modified_SCREEN_WIDTH, 2 * Modified_SCREEN_WIDTH)
         self.color = (random.randint(200, 255), random.randint(100, 192), random.randint(180, 203))
@@ -36,9 +42,9 @@ class CherryBlossom:
     def update(self, dt):
       self.y += self.speed * dt
       self.x += self.speed_x * dt
-      if self.y > SCREEN_HEIGHT:
+      if self.y > screen_height:
           self.reset()
-      elif self.x > SCREEN_WIDTH:
+      elif self.x > screen_width:
           self.x = 0
 
     def push_away(self, mouse_pos):
@@ -68,7 +74,7 @@ class WhiteCherryBlossom(CherryBlossom):
     def update(self, dt):
         self.y += self.speed * dt
         self.x += self.speed_x * dt
-        if self.y > SCREEN_HEIGHT or self.x > SCREEN_WIDTH:
+        if self.y > screen_height or self.x > screen_width:
           cherry_blossoms.remove(self)
 
 cherry_blossoms = [CherryBlossom() for _ in range(700)]
@@ -133,12 +139,12 @@ while running:
     controls_text = font.render('Period: Show/Hide Text, S: Screenshot, P: Pause, Up: Add 50, Down: Remove 50, Left: Slow Down, Right: Speed Up, Click: Add White, Right Click: Push Away', False, (255, 255, 255))
 
     if(text):
-        screen.blit(controls_text, (SCREEN_WIDTH - 50 - controls_text.get_width(), 0))
-        screen.blit(dt_text, (SCREEN_WIDTH - 50 - dt_text.get_width(), 50))
-        screen.blit(scale_text, (SCREEN_WIDTH - 50 - scale_text.get_width(), 100))
-        screen.blit(pink_count_text, (SCREEN_WIDTH - 50 - pink_count_text.get_width(), 150))
-        screen.blit(count_text, (SCREEN_WIDTH - 50 - count_text.get_width(), 200))
-        screen.blit(fps_text, (SCREEN_WIDTH - 50 - fps_text.get_width(), 250))
+        screen.blit(controls_text, (screen_width - controls_text.get_width(), 0))
+        screen.blit(dt_text, (screen_width - dt_text.get_width(), 50))
+        screen.blit(scale_text, (screen_width - scale_text.get_width(), 100))
+        screen.blit(pink_count_text, (screen_width - pink_count_text.get_width(), 150))
+        screen.blit(count_text, (screen_width - count_text.get_width(), 200))
+        screen.blit(fps_text, (screen_width - fps_text.get_width(), 250))
 
     pygame.display.flip()
 

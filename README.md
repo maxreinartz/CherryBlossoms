@@ -19,7 +19,7 @@ This is a simple program I made in my free time. It's a full screen applicaton o
 ```git clone https://github.com/creeper76/cherryblossoms```
 
 2. Install dependencies
-```pip install pygame```
+```pip install pygame screeninfo```
 
 3. Run the file
 ```python main.py```
