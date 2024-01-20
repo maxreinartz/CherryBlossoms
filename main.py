@@ -42,6 +42,7 @@ controls = [
     'P: Pause',
     'N: Fireworks Mode Down',
     'M: Fireworks Mode Up',
+    'L: Load Image',
     'LBracket: FPS Down',
     'RBracket: FPS Up',
     'Up: Add 50',

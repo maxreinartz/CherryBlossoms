@@ -34,6 +34,7 @@ S: Screenshot
 P: Pause  
 N: Fireworks Mode Down  
 M: Fireworks Mode Up  
+L: Load Image  
 LBracket: FPS Down  
 RBacket: FPS Up  
 Up: Add 50  
