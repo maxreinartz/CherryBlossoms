@@ -31,6 +31,10 @@ Esc: Quit
 Period: Show/Hide Debug Info  
 S: Screenshot  
 P: Pause  
+N: Fireworks Mode Down  
+M: Fireworks Mode Up  
+LBracket: FPS Down  
+RBacket: FPS Up  
 Up: Add 50  
 Down: Remove 50  
 Left: Slow Down  

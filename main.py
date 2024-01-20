@@ -25,6 +25,81 @@ icon = pygame.image.load('icon.png')
 pygame.display.set_icon(icon)
 paused = False
 time_scale = 1.0
+firework_mode = 1
+FPS = 60
+
+controls = [
+    'Esc: Quit',
+    'Period: Show/Hide Text',
+    'S: Screenshot',
+    'P: Pause',
+    'N: Fireworks Mode Down',
+    'M: Fireworks Mode Up',
+    'LBracket: FPS Down',
+    'RBracket: FPS Up',
+    'Up: Add 50',
+    'Down: Remove 50',
+    'Left: Slow Down',
+    'Right: Speed Up',
+    'Click: Add White',
+    'Middle Click: Firework',
+    'Right Click: Push Away',
+]
+
+controls.sort(key=len, reverse=True)
+controls_x = 10
+controls_y = 10
+
+color_presets = [
+    [(200, 255), (0, 100), (0, 100)], # red
+    [(200, 255), (100, 200), (0, 50)], # orange
+    [(200, 255), (200, 255), (0, 100)], # yellow
+    [(0, 100), (200, 255), (0, 100)], # green
+    [(0, 100), (200, 255), (200, 255)], # blue
+    [(100, 200), (0, 100), (200, 255)], # purple
+]
+
+pattern_presets = [
+    [  # USA pattern
+        [(200, 255), (0, 100), (0, 100)],  # red
+        [(200, 255), (200, 255), (200, 255)],  # white
+        [(0, 100), (0, 100), (200, 255)],  # blue
+    ],
+    [  # Japan pattern
+        [(200, 255), (0, 100), (0, 100)],  # red
+        [(200, 255), (200, 255), (200, 255)],  # white
+    ],
+    [  # Germany pattern
+        [(0, 100), (0, 100), (0, 100)],  # black
+        [(200, 255), (0, 100), (0, 100)],  # red
+        [(200, 255), (200, 255), (0, 100)], # yellow
+    ],
+    [   # Creeper pattern
+        [(0, 100), (0, 100), (0, 100)],  # black
+        [(0, 100), (200, 255), (0, 100)],  # green 
+    ],
+    [   # Rainbow pattern
+        [(200, 255), (0, 100), (0, 100)],  # red
+        [(200, 255), (100, 200), (0, 50)],  # orange
+        [(200, 255), (200, 255), (0, 100)],  # yellow
+        [(0, 100), (200, 255), (0, 100)],  # green
+        [(0, 100), (200, 255), (200, 255)],  # blue
+        [(100, 200), (0, 100), (200, 255)],  # purple
+    ],
+    [   # Penguin pattern
+        [(200, 255), (200, 255), (200, 255)],  # white
+        [(0, 100), (0, 100), (0, 100)],  # black
+    ],
+    [   # Cool Colors pattern
+        [(0, 100), (200, 255), (200, 255)],  # cyan
+        [(100, 200), (0, 100), (200, 255)],  # purple
+    ],
+    [   # Warm Colors pattern
+        [(200, 255), (0, 100), (0, 100)],  # red
+        [(200, 255), (200, 255), (0, 100)],  # yellow
+        [(0, 100), (200, 255), (0, 100)],  # green
+    ]
+]
 
 class CherryBlossom:
     def __init__(self):
@@ -85,18 +160,18 @@ class WhiteCherryBlossom(CherryBlossom):
           cherry_blossoms.remove(self)
 
 class Firework(CherryBlossom):
-    def __init__(self):
+    def __init__(self, color):
         self.isPink = False
         self.trail = []
-        self.reset()
+        self.reset(color)
     
-    def reset(self):
+    def reset(self, color):
         angle = random.uniform(0, 2 * math.pi)
         self.x = pygame.mouse.get_pos()[0]
         self.y = pygame.mouse.get_pos()[1]
         self.speed = random.uniform(0.01 * Modified_SCREEN_HEIGHT, 1.5 * Modified_SCREEN_HEIGHT) * math.cos(angle)
         self.speed_x = random.uniform(1 * Modified_SCREEN_WIDTH, 2 * Modified_SCREEN_WIDTH) * math.sin(angle)
-        self.color = (random.randint(200, 255), random.randint(100, 200), random.randint(0, 50))
+        self.color = (random.randint(color[0][0], color[0][1]), random.randint(color[1][0], color[1][1]), random.randint(color[2][0], color[2][1]))
         self.radius = random.randint(1, 3)
 
     def update(self, dt):
@@ -114,7 +189,7 @@ fireworks = []
 
 running = True
 while running:
-    dt = clock.tick(60) / 16.0 # 16 keeps the delta time at 1.0
+    dt = clock.tick(FPS) / 16.0 # 16 keeps the delta time at 1.0
     dt *= time_scale
 
     pink_cherry_blossoms = [cherry_blossom for cherry_blossom in cherry_blossoms if cherry_blossom.isPink]
@@ -146,9 +221,30 @@ while running:
                 pygame.image.save(screen, f'screenshot_{timestamp}.png')
             elif event.key == pygame.K_p:
                 paused = not paused
+            elif event.key == pygame.K_LEFTBRACKET:
+                FPS -= 15
+                if FPS < 15:
+                    FPS = 15
+            elif event.key == pygame.K_RIGHTBRACKET:
+                FPS += 15
+            elif event.key == pygame.K_m:
+                firework_mode += 1
+                if firework_mode > 2:
+                    firework_mode = 2
+            elif event.key == pygame.K_n:
+                firework_mode -= 1
+                if firework_mode < 1:
+                    firework_mode = 1
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 2:
-            for _ in range(int(round(len(pink_cherry_blossoms) / 2, 0))):
-                cherry_blossoms.append(Firework())
+            if(firework_mode == 1):
+                color_preset = random.choice(color_presets)
+                for _ in range(int(round(len(pink_cherry_blossoms) / 2, 0))):
+                    cherry_blossoms.append(Firework(color_preset))
+            elif(firework_mode == 2):
+                pattern_preset = random.choice(pattern_presets)
+                for _ in range(int(round(len(pink_cherry_blossoms) / 2, 0))):
+                    color_preset = random.choice(pattern_preset)
+                    cherry_blossoms.append(Firework(color_preset))
     if pygame.mouse.get_pressed()[0]:
         for _ in range(int(round(len(pink_cherry_blossoms) / 100, 0))):
             cherry_blossoms.append(WhiteCherryBlossom())
@@ -169,18 +265,23 @@ while running:
 
     fps_text = font.render("FPS: {:.2f}".format(fps), True, (255, 255, 255))
     dt_text = font.render("Delta Time: {:.2f}".format(dt), True, (255, 255, 255))
+    firework_text = font.render("Firework Mode: {}".format(firework_mode), True, (255, 255, 255))
     scale_text = font.render("Time Scale: {:.2f}".format(time_scale), True, (255, 255, 255))
     pink_count_text = font.render('Pink Count: {}'.format(len(pink_cherry_blossoms)), False, (255, 255, 255))
     count_text = font.render('Count: {}'.format(len(cherry_blossoms)), False, (255, 255, 255))
-    controls_text = font.render('Esc: Quit, Period: Show/Hide Text, S: Screenshot, P: Pause, Up: Add 50, Down: Remove 50, Left: Slow Down, Right: Speed Up, Click: Add White, Middle Click: Firework, Right Click: Push Away', False, (255, 255, 255))
 
     if(text):
-        screen.blit(controls_text, (screen_width - controls_text.get_width(), 0))
-        screen.blit(dt_text, (screen_width - dt_text.get_width(), 30))
-        screen.blit(scale_text, (screen_width - scale_text.get_width(), 60))
-        screen.blit(pink_count_text, (screen_width - pink_count_text.get_width(), 90))
-        screen.blit(count_text, (screen_width - count_text.get_width(), 120))
-        screen.blit(fps_text, (screen_width - fps_text.get_width(), 150))
+        controls_y = 10
+        for control in controls:
+            control_text = font.render(control, True, (255, 255, 255))
+            screen.blit(control_text, (controls_x, controls_y))
+            controls_y += control_text.get_height() + 10
+        screen.blit(firework_text, (screen_width - firework_text.get_width() - 10, 10))
+        screen.blit(dt_text, (screen_width - dt_text.get_width() - 10, 40))
+        screen.blit(scale_text, (screen_width - scale_text.get_width() - 10, 70))
+        screen.blit(pink_count_text, (screen_width - pink_count_text.get_width() - 10, 100))
+        screen.blit(count_text, (screen_width - count_text.get_width() - 10, 130))
+        screen.blit(fps_text, (screen_width - fps_text.get_width() - 10, 160))
 
     pygame.display.flip()
 
