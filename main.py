@@ -1,4 +1,4 @@
-import pygame, random, math, asyncio
+import pygame, random, math
 from datetime import datetime
 from screeninfo import get_monitors
 
