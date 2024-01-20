@@ -5,6 +5,7 @@ This is a simple program I made in my free time. It's a full screen applicaton o
 ![Screenshot 1 of Cherry Blossoms](img1.png)
 ![Screenshot 2 of Cherry Blossoms](img3.png)
 ![Screenshot 4 of Cherry Blossoms](img4.png)
+![Screenshot 5 of Cherry Blossoms](img5.png)
 ![Screenshot 3 of Cherry Blossoms](img2.png)
 
 ## Table of Contents
@@ -20,7 +21,7 @@ This is a simple program I made in my free time. It's a full screen applicaton o
 ```git clone https://github.com/creeper76/cherryblossoms```
 
 2. Install dependencies  
-```pip install pygame screeninfo```
+```pip install -r requirements```
 
 3. Run the file  
 ```python main.py```

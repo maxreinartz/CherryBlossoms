@@ -1,11 +1,18 @@
-import pygame, random, math
+import pygame, random, math, tkinter
 from datetime import datetime
 from screeninfo import get_monitors
+from tkinter import filedialog
 
 def get_screen_size():
     for m in get_monitors():
         if m.is_primary:
             return m.width, m.height
+        
+def select_image():
+    root = tkinter.Tk()
+    root.withdraw()  # Hide the main window
+    file_path = filedialog.askopenfilename(filetypes=[('Image Files', '*.png;*.jpg;*.jpeg;*.bmp')])  # Show the file dialog
+    return file_path
 
 screen_width, screen_height = get_screen_size()
 
@@ -116,12 +123,15 @@ class CherryBlossom:
         self.color = (random.randint(200, 255), random.randint(100, 192), random.randint(180, 203))
 
     def update(self, dt):
-      self.y += self.speed * dt
-      self.x += self.speed_x * dt
-      if self.y > screen_height:
-          self.reset()
-      elif self.x > screen_width:
-          self.x = 0
+        self.y += self.speed * dt
+        self.x += self.speed_x * dt
+        if not self.isPink:
+            if self.y > screen_height or self.x > screen_width:
+                cherry_blossoms.remove(self)
+        elif self.y > screen_height:
+            self.reset()
+        elif self.x > screen_width:
+            self.x = 0
 
     def push_away(self, mouse_pos):
         dx, dy = self.x - mouse_pos[0], self.y - mouse_pos[1]
@@ -184,6 +194,24 @@ class Firework(CherryBlossom):
         if len(self.trail) > 5:
             self.trail.pop(0)
 
+def create_cherry_blossoms_from_image(image_path, scale_factor=0.5, step=5):
+    image_surface = pygame.image.load(image_path)
+    width, height = image_surface.get_size()
+    image_surface = pygame.transform.scale(image_surface, (int(width * scale_factor), int(height * scale_factor)))
+    image_array = pygame.surfarray.array3d(image_surface)
+    alpha_array = pygame.surfarray.array_alpha(image_surface)
+    cherry_blossoms = []
+    for y in range(0, image_array.shape[1], step):
+        for x in range(0, image_array.shape[0], step):
+            if alpha_array[x, y] > 0:
+                cherry_blossom = CherryBlossom()
+                cherry_blossom.x = x - width // 4
+                cherry_blossom.y = y - height // 4
+                cherry_blossom.color = image_array[x, y]
+                cherry_blossom.isPink = False
+                cherry_blossoms.append(cherry_blossom)
+    return cherry_blossoms
+
 cherry_blossoms = [CherryBlossom() for _ in range(700)]
 fireworks = []
 
@@ -235,6 +263,15 @@ while running:
                 firework_mode -= 1
                 if firework_mode < 1:
                     firework_mode = 1
+            elif event.key == pygame.K_l:
+                x, y = pygame.mouse.get_pos()
+                image_path = select_image()
+                if image_path:
+                    new_cherry_blossoms = create_cherry_blossoms_from_image(image_path)
+                    for cherry_blossom in new_cherry_blossoms:
+                        cherry_blossom.x += x
+                        cherry_blossom.y += y
+                    cherry_blossoms.extend(new_cherry_blossoms)
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 2:
             if(firework_mode == 1):
                 color_preset = random.choice(color_presets)
