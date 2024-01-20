@@ -33,7 +33,8 @@ Up: Add 50
 Down: Remove 50  
 Left: Slow Down  
 Right: Speed Up
-Click: Add White Cherry Blossoms (fun to use)  
+Click: Add White Cherry Blossoms (fun to use)
+Middle Click: Firework
 Right Click: Push Away Cherry Blossoms
 
 ## Contributing
