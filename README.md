@@ -28,7 +28,7 @@ This is a simple program I made in my free time. It's a full screen applicaton o
 
 ## Controls
 
-Esc: Quit  
+Esc/Space: Quit  
 Period: Show/Hide Debug Info  
 S: Screenshot  
 P: Pause  

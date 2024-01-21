@@ -36,7 +36,7 @@ firework_mode = 1
 FPS = 60
 
 controls = [
-    'Esc: Quit',
+    'Esc/Space: Quit',
     'Period: Show/Hide Text',
     'S: Screenshot',
     'P: Pause',
@@ -242,7 +242,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
+            if event.key == pygame.K_ESCAPE or event.key == pygame.K_SPACE:
                 running = False
             elif event.key == pygame.K_UP:
                 for _ in range(50):
@@ -323,6 +323,9 @@ while running:
     scale_text = font.render("Time Scale: {:.2f}".format(time_scale), True, (255, 255, 255))
     pink_count_text = font.render('Pink Count: {}'.format(len(pink_cherry_blossoms)), False, (255, 255, 255))
     count_text = font.render('Count: {}'.format(len(cherry_blossoms)), False, (255, 255, 255))
+    # You can't remove or modify the following two lines
+    made_with_love = font.render("Made with love by Creeper76 ", True, (255, 255, 255))
+    heart = font.render("<3", True, (255, 105, 180))
 
     if(text):
         controls_y = 10
@@ -336,6 +339,9 @@ while running:
         screen.blit(pink_count_text, (screen_width - pink_count_text.get_width() - 10, 100))
         screen.blit(count_text, (screen_width - count_text.get_width() - 10, 130))
         screen.blit(fps_text, (screen_width - fps_text.get_width() - 10, 160))
+        # You can't remove or modify the following two lines
+        screen.blit(made_with_love, (screen_width - made_with_love.get_width() - heart.get_width() - 10, screen_height - made_with_love.get_height() - 10))
+        screen.blit(heart, (screen_width - heart.get_width() - 10, screen_height - heart.get_height() - 10))
 
     pygame.display.flip()
 
