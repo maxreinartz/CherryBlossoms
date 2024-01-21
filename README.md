@@ -24,7 +24,7 @@ This is a simple program I made in my free time. It's a full screen applicaton o
 ```pip install -r requirements```
 
 3. Run the file  
-```python main.py```
+```python main.pyw```
 
 ## Controls
 
