@@ -152,10 +152,11 @@ class CherryBlossom:
     def push_away(self, mouse_pos):
         dx, dy = self.x - mouse_pos[0], self.y - mouse_pos[1]
         distance = math.sqrt(dx**2 + dy**2)
-        if distance < 150:
-            push_force = 150 / distance
-            self.x += dx / distance * push_force
-            self.y += dy / distance * push_force
+        if distance > 0:
+            if distance < 150:
+                push_force = 150 / distance
+                self.x += dx / distance * push_force
+                self.y += dy / distance * push_force
 
     def draw(self, screen):
         if len(self.trail) > 1:
