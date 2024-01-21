@@ -12,7 +12,7 @@ logging.basicConfig(
 date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
 logging.info(f'=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-={date}=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
 
-version = 2
+version = 3
 updates = True
 
 def check_for_updates():
