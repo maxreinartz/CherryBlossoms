@@ -1,7 +1,35 @@
-import pygame, random, math, tkinter
+import pygame, random, math, tkinter, requests, os, logging
 from datetime import datetime
 from screeninfo import get_monitors
 from tkinter import filedialog
+
+appdata = os.getenv('APPDATA')
+logging.basicConfig(
+    filename=os.path.join(appdata, 'CherryBlossoms', 'cherryblossoms.log'),
+    level=logging.INFO,
+    format='CherryBlossoms - %(levelname)s: %(message)s'
+)
+date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+logging.info(f'=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-={date}=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
+
+version = 1
+
+def check_for_updates():
+    logging.info(f"Version: {version}")
+    
+    response = requests.get('https://raw.githubusercontent.com/Creeper76/CherryBlossoms/main/version.txt')
+    latest_version = response.text.strip()
+    os.makedirs(os.path.join(appdata, 'CherryBlossoms'), exist_ok=True)
+    with open(os.path.join(appdata, 'CherryBlossoms', 'version.txt'), 'wb') as f:
+        f.write(str(version).encode())
+    with open(os.path.join(appdata, 'CherryBlossoms', 'version.txt'), 'r') as f:
+        current_version = f.read().strip()
+    if latest_version > current_version:
+        logging.info(f'Update available! You\'re Version: {current_version}; Latest Version: {latest_version}')
+    else:
+        logging.info('You\'re up to date!')
+
+check_for_updates()
 
 def get_screen_size():
     for m in get_monitors():
@@ -9,9 +37,10 @@ def get_screen_size():
             return m.width, m.height
         
 def select_image():
+    logging.info('Opened select image prompt.')
     root = tkinter.Tk()
-    root.withdraw()  # Hide the main window
-    file_path = filedialog.askopenfilename(filetypes=[('Image Files', '*.png;*.jpg;*.jpeg;*.bmp')])  # Show the file dialog
+    root.withdraw()
+    file_path = filedialog.askopenfilename(filetypes=[('Image Files', '*.png;*.jpg;*.jpeg;*.bmp')])
     return file_path
 
 screen_width, screen_height = get_screen_size()
@@ -28,8 +57,28 @@ Modified_SCREEN_HEIGHT = (screen_width/600)
 screen = pygame.display.set_mode((screen_width, screen_height), pygame.NOFRAME)
 clock = pygame.time.Clock()
 pygame.display.set_caption('Cherry Blossoms')
-icon = pygame.image.load('icon.png')
-pygame.display.set_icon(icon)
+
+try:
+    icon = pygame.image.load(os.path.join(appdata, 'CherryBlossoms/icon.png'))
+    pygame.display.set_icon(icon)
+except:
+    logging.warning('Icon not found, downloading...')
+    url = 'https://raw.githubusercontent.com/Creeper76/CherryBlossoms/main/icon.png'
+    try:
+        response = requests.get(url)
+        os.makedirs(os.path.join(appdata, 'CherryBlossoms'), exist_ok=True)
+        with open(os.path.join(appdata, 'CherryBlossoms', 'icon.png'), 'wb') as f:
+            f.write(response.content)
+    except:
+        logging.error('Request failed! (are you connected to the internet?)')
+        logging.info('Skipping...')
+    try:
+        icon = pygame.image.load(os.path.join(appdata, 'CherryBlossoms', 'icon.png'))
+        pygame.display.set_icon(icon)
+        logging.info('Icon downloaded successfully!')
+    except Exception as e:
+        logging.error('Failed to download icon, skipping...')
+        logging.error('Error: {}'.format(e))
 paused = False
 time_scale = 1.0
 firework_mode = 1
@@ -316,6 +365,9 @@ while running:
         cherry_blossom.draw(screen)
 
     fps = clock.get_fps()
+
+    if(fps < 15):
+        logging.warning('FPS is below 15!')
 
     fps_text = font.render("FPS: {:.2f}".format(fps), True, (255, 255, 255))
     dt_text = font.render("Delta Time: {:.2f}".format(dt), True, (255, 255, 255))
