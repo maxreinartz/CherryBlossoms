@@ -1,4 +1,4 @@
-import pygame, random, math, tkinter, requests, os, logging
+import pygame, random, math, tkinter, requests, os, logging, zipfile, shutil
 from datetime import datetime
 from screeninfo import get_monitors
 from tkinter import filedialog
@@ -12,24 +12,48 @@ logging.basicConfig(
 date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
 logging.info(f'=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-={date}=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
 
-version = 1
+version = 2
+updates = True
 
 def check_for_updates():
     logging.info(f"Version: {version}")
     
-    response = requests.get('https://raw.githubusercontent.com/Creeper76/CherryBlossoms/main/version.txt')
-    latest_version = response.text.strip()
-    os.makedirs(os.path.join(appdata, 'CherryBlossoms'), exist_ok=True)
-    with open(os.path.join(appdata, 'CherryBlossoms', 'version.txt'), 'wb') as f:
-        f.write(str(version).encode())
-    with open(os.path.join(appdata, 'CherryBlossoms', 'version.txt'), 'r') as f:
-        current_version = f.read().strip()
-    if latest_version > current_version:
-        logging.info(f'Update available! You\'re Version: {current_version}; Latest Version: {latest_version}')
-    else:
-        logging.info('You\'re up to date!')
+    try:
+        response = requests.get('https://raw.githubusercontent.com/Creeper76/CherryBlossoms/main/version.txt')
+        latest_version = response.text.strip()
+        os.makedirs(os.path.join(appdata, 'CherryBlossoms'), exist_ok=True)
+        with open(os.path.join(appdata, 'CherryBlossoms', 'version.txt'), 'wb') as f:
+            f.write(str(version).encode())
+        with open(os.path.join(appdata, 'CherryBlossoms', 'version.txt'), 'r') as f:
+            current_version = f.read().strip()
+        if latest_version > current_version:
+            logging.info(f'Update available! You\'re Version: {current_version}; Latest Version: {latest_version}')
+            logging.info('Downloading update...')
+            response = requests.get('https://github.com/creeper76/cherryblossoms/archive/refs/heads/main.zip')
+            with open(os.path.join(appdata, 'CherryBlossoms', f'cherryblossoms_update_{latest_version}.zip'), 'wb') as f:
+                f.write(response.content)
 
-check_for_updates()
+            files_to_extract = ['CherryBlossoms-main/main.pyw']
+            with zipfile.ZipFile(os.path.join(appdata, 'CherryBlossoms', f'cherryblossoms_update_{latest_version}.zip'), 'r') as zip_ref:
+                for file in files_to_extract:
+                    try:
+                        data = zip_ref.read(file)
+                        with open(os.path.join(appdata, 'CherryBlossoms', os.path.basename(file)), 'wb') as f:
+                            f.write(data)
+                    except KeyError:
+                        logging.error(f'The file {file} is not in the zip file')
+            
+            os.remove(os.path.join(appdata, 'CherryBlossoms', f'cherryblossoms_update_{latest_version}.zip'))
+
+            shutil.copy(os.path.join(appdata, 'CherryBlossoms', 'main.pyw'), os.getcwd())
+        else:
+            logging.info('You\'re up to date!')
+    except Exception as e:
+        logging.error('Something went wrong while updating :(')
+        logging.error(e)
+
+if updates:
+    check_for_updates()
 
 def get_screen_size():
     for m in get_monitors():
