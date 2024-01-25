@@ -13,7 +13,7 @@ date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
 logging.info(f'=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-={date}=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
 
 version = 3
-updates = True
+updates = False
 
 def check_for_updates():
     logging.info(f"Version: {version}")
