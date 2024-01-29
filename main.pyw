@@ -260,15 +260,15 @@ class WhiteCherryBlossom(CherryBlossom):
           cherry_blossoms.remove(self)
 
 class Firework(CherryBlossom):
-    def __init__(self, color):
+    def __init__(self, color, x, y):
         self.isPink = False
         self.trail = []
-        self.reset(color)
+        self.reset(color, x, y)
     
-    def reset(self, color):
+    def reset(self, color, x, y):
         angle = random.uniform(0, 2 * math.pi)
-        self.x = pygame.mouse.get_pos()[0]
-        self.y = pygame.mouse.get_pos()[1]
+        self.x = x
+        self.y = y
         self.speed = random.uniform(0.01 * Modified_SCREEN_HEIGHT, 1.5 * Modified_SCREEN_HEIGHT) * math.cos(angle)
         self.speed_x = random.uniform(1 * Modified_SCREEN_WIDTH, 2 * Modified_SCREEN_WIDTH) * math.sin(angle)
         self.color = (random.randint(color[0][0], color[0][1]), random.randint(color[1][0], color[1][1]), random.randint(color[2][0], color[2][1]))
@@ -309,6 +309,13 @@ running = True
 while running:
     dt = clock.tick(FPS) / 16.0 # 16 keeps the delta time at 1.0
     dt *= time_scale
+    
+    if(random.randint(1, 50) * dt == 1):
+        PosX = random.randint(50, screen_width - 50)
+        PosY = random.randint(150, screen_height - 200)
+        ColorPresent = random.choice(color_presets)
+        for _ in range(int(round(len(pink_cherry_blossoms) / 2, 0))):
+            cherry_blossoms.append(Firework(ColorPresent, PosX, PosY))
 
     pink_cherry_blossoms = [cherry_blossom for cherry_blossom in cherry_blossoms if cherry_blossom.isPink]
     for event in pygame.event.get():
@@ -366,12 +373,12 @@ while running:
             if(firework_mode == 1):
                 color_preset = random.choice(color_presets)
                 for _ in range(int(round(len(pink_cherry_blossoms) / 2, 0))):
-                    cherry_blossoms.append(Firework(color_preset))
+                    cherry_blossoms.append(Firework(color_preset, pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]))
             elif(firework_mode == 2):
                 pattern_preset = random.choice(pattern_presets)
                 for _ in range(int(round(len(pink_cherry_blossoms) / 2, 0))):
                     color_preset = random.choice(pattern_preset)
-                    cherry_blossoms.append(Firework(color_preset))
+                    cherry_blossoms.append(Firework(color_preset, pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]))
     if pygame.mouse.get_pressed()[0]:
         for _ in range(int(round(len(pink_cherry_blossoms) / 100, 0))):
             cherry_blossoms.append(WhiteCherryBlossom())
@@ -399,6 +406,7 @@ while running:
     scale_text = font.render("Time Scale: {:.2f}".format(time_scale), True, (255, 255, 255))
     pink_count_text = font.render('Pink Count: {}'.format(len(pink_cherry_blossoms)), False, (255, 255, 255))
     count_text = font.render('Count: {}'.format(len(cherry_blossoms)), False, (255, 255, 255))
+    mouse_pos_text = font.render('Mouse Pos: {}'.format(pygame.mouse.get_pos()), False, (255, 255, 255))
     # You can't remove or modify the following two lines
     made_with_love = font.render("Made with love by Creeper76 ", True, (255, 255, 255))
     heart = font.render("<3", True, (255, 105, 180))
@@ -409,12 +417,17 @@ while running:
             control_text = font.render(control, True, (255, 255, 255))
             screen.blit(control_text, (controls_x, controls_y))
             controls_y += control_text.get_height() + 10
-        screen.blit(firework_text, (screen_width - firework_text.get_width() - 10, 10))
-        screen.blit(dt_text, (screen_width - dt_text.get_width() - 10, 40))
-        screen.blit(scale_text, (screen_width - scale_text.get_width() - 10, 70))
-        screen.blit(pink_count_text, (screen_width - pink_count_text.get_width() - 10, 100))
-        screen.blit(count_text, (screen_width - count_text.get_width() - 10, 130))
-        screen.blit(fps_text, (screen_width - fps_text.get_width() - 10, 160))
+        TEXT_PADDING = 10
+        TEXT_HEIGHT = 30
+        TEXT_START_HEIGHT = 10
+
+        screen.blit(mouse_pos_text, (screen_width - mouse_pos_text.get_width() - TEXT_PADDING, TEXT_START_HEIGHT + 0*TEXT_HEIGHT))
+        screen.blit(firework_text, (screen_width - firework_text.get_width() - TEXT_PADDING, TEXT_START_HEIGHT + 1*TEXT_HEIGHT))
+        screen.blit(dt_text, (screen_width - dt_text.get_width() - TEXT_PADDING, TEXT_START_HEIGHT + 2*TEXT_HEIGHT))
+        screen.blit(scale_text, (screen_width - scale_text.get_width() - TEXT_PADDING, TEXT_START_HEIGHT + 3*TEXT_HEIGHT))
+        screen.blit(pink_count_text, (screen_width - pink_count_text.get_width() - TEXT_PADDING, TEXT_START_HEIGHT + 4*TEXT_HEIGHT))
+        screen.blit(count_text, (screen_width - count_text.get_width() - TEXT_PADDING, TEXT_START_HEIGHT + 5*TEXT_HEIGHT))
+        screen.blit(fps_text, (screen_width - fps_text.get_width() - TEXT_PADDING, TEXT_START_HEIGHT + 6*TEXT_HEIGHT))
         # You can't remove or modify the following two lines
         screen.blit(made_with_love, (screen_width - made_with_love.get_width() - heart.get_width() - 10, screen_height - made_with_love.get_height() - 10))
         screen.blit(heart, (screen_width - heart.get_width() - 10, screen_height - heart.get_height() - 10))
