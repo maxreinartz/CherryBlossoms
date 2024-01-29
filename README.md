@@ -14,6 +14,7 @@ This is a simple program I made in my free time. It's a full screen applicaton o
 - [Controls](#controls)
 - [Contributing](#contributing)
 - [License](#license)
+- [Contact](#contact)
 
 ## Installation
 
