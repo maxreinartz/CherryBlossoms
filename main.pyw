@@ -12,8 +12,8 @@ logging.basicConfig(
 date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
 logging.info(f'=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-={date}=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
 
-version = 4
-updates = False
+version = 5
+updates = True
 
 def check_for_updates():
     logging.info(f"Version: {version}")
