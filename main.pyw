@@ -12,7 +12,7 @@ logging.basicConfig(
 date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
 logging.info(f'=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-={date}=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
 
-version = 3
+version = 4
 updates = False
 
 def check_for_updates():
@@ -33,7 +33,7 @@ def check_for_updates():
             with open(os.path.join(appdata, 'CherryBlossoms', f'cherryblossoms_update_{latest_version}.zip'), 'wb') as f:
                 f.write(response.content)
 
-            files_to_extract = ['CherryBlossoms-main/main.pyw']
+            files_to_extract = ['CherryBlossoms-main/main.pyw', 'CherryBlossoms-main/LICENSE', 'CherryBlossoms-main/icon.png']
             with zipfile.ZipFile(os.path.join(appdata, 'CherryBlossoms', f'cherryblossoms_update_{latest_version}.zip'), 'r') as zip_ref:
                 for file in files_to_extract:
                     try:
