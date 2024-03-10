@@ -31,9 +31,9 @@ logging.basicConfig(
 date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
 logging.info(f'=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-={date}=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=')
 
-version = 6
+version = 7
 # Set to False to disable updates
-updates = False
+updates = True
 
 # Checks for updates
 def check_for_updates():
